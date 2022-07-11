@@ -1,6 +1,4 @@
-import userPic from "../assets/img/user_pic.png";
-
-export const columnsUserManagement = [
+export const columnsLocationManagement = [
     {
         title: "Tên",
         dataIndex: "name",
@@ -17,31 +15,17 @@ export const columnsUserManagement = [
             return 0;
         },
     },
+
     {
-        title: "Email",
-        dataIndex: "email",
-        key: "email",
+        title: "Tỉnh thành",
+        dataIndex: "province",
+        key: "province",
         align: "center",
         sorter: (a, b) => {
-            if (a.email > b.email) {
+            if (a.province > b.province) {
                 return 1;
             }
-            if (a.email < b.email) {
-                return -1;
-            }
-            return 0;
-        },
-    },
-    {
-        title: "Địa chỉ",
-        dataIndex: "address",
-        key: "address",
-        align: "center",
-        sorter: (a, b) => {
-            if (a.address > b.address) {
-                return 1;
-            }
-            if (a.address < b.address) {
+            if (a.province < b.province) {
                 return -1;
             }
             return 0;
@@ -49,37 +33,24 @@ export const columnsUserManagement = [
     },
     {
         title: "Hình ảnh",
-        dataIndex: "avatar",
-        key: "avatar",
+        dataIndex: "image",
+        key: "image",
         align: "center",
         render: (img) => {
             return (
                 <div className="flex justify-center">
-                    {img ? (
-                        <img className="h-16 w-24" src={img} alt={img} />
-                    ) : (
-                        <img
-                            className="h-16 w-24"
-                            src={userPic}
-                            alt={userPic}
-                        />
-                    )}
+                    <img className="h-16 w-24" src={img} alt={img} />
                 </div>
             );
         },
     },
     {
-        title: "Số điện thoại",
-        dataIndex: "phone",
-        key: "phone",
+        title: "Quốc gia",
+        dataIndex: "country",
+        key: "phoncountrye",
         align: "center",
     },
-    {
-        title: "Mã loại",
-        dataIndex: "type",
-        key: "type",
-        align: "center",
-    },
+
     {
         title: "Thao tác",
         dataIndex: "action",
