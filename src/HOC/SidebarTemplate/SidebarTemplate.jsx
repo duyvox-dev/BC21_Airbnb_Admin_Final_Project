@@ -3,7 +3,7 @@ import { NavLink } from "react-router-dom";
 
 export default function SidebarTemplate() {
   return (
-    <div className="fixed left-0 bottom-0 top-0 h-full w-60 pt-20">
+    <div className="fixed left-0 bottom-0 top-20 h-full w-60">
       <div className="h-full w-full shadow-md">
         <div className="pt-16 px-5 flex flex-col justify-start space-y-8">
           <div className="text-lg font-medium">
