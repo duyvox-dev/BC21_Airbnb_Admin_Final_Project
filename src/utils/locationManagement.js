@@ -47,7 +47,7 @@ export const columnsLocationManagement = [
     {
         title: "Quốc gia",
         dataIndex: "country",
-        key: "phoncountrye",
+        key: "country",
         align: "center",
     },
 
