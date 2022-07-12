@@ -6,7 +6,9 @@ export default function ThemeLayout(props) {
   return (
     <>
       <HeaderTemplate />
-      <props.Component />
+      <div className="pt-20">
+        <props.Component />
+      </div>
       <SidebarTemplate />
     </>
   );
