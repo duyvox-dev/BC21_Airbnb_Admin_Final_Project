@@ -1,4 +1,4 @@
-import { httpService } from "./configURL";
+import { httpService } from "./httpService";
 
 export const locationService = {
     createLocation: (data) => {
