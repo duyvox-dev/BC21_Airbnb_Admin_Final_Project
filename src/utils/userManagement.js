@@ -1,4 +1,5 @@
 import userPic from "../assets/img/user_pic.png";
+import { openCloseModal, getInfoUser, getIdUserPut } from "../redux/userSlice";
 
 export const columnsUserManagement = [
   {
@@ -22,6 +23,7 @@ export const columnsUserManagement = [
     dataIndex: "email",
     key: "email",
     align: "center",
+    className: "font-medium",
     sorter: (a, b) => {
       if (a.email > b.email) {
         return 1;
@@ -81,13 +83,20 @@ export const columnsUserManagement = [
     dataIndex: "action",
     key: "action",
     align: "center",
-    render: (_, record) => {
+    render: (dispatch, record) => {
       return (
         <div className="flex justify-center space-x-4 w-full h-full">
-          <button className="text-white bg-blue-600 px-4 py-2 rounded">
+          <button
+            className="text-white bg-blue-600 px-4 py-2 rounded font-medium"
+            onClick={() => (
+              dispatch(getInfoUser(record._id)),
+              dispatch(getIdUserPut(record._id)),
+              dispatch(openCloseModal(true))
+            )}
+          >
             Sửa
           </button>
-          <button className="text-white bg-red-600 px-4 py-2 rounded">
+          <button className="text-white bg-red-600 px-4 py-2 rounded font-medium">
             Xóa
           </button>
         </div>
