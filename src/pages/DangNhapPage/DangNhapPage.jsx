@@ -12,6 +12,7 @@ export default function DangNhapPage() {
     isLoggedIn && navigate("/user");
   }, [isLoggedIn]);
 
+  document.title = "Airbnb | Đăng nhập";
   return (
     <div className="w-screen flex flex-col justify-start items-center pt-20">
       <div className="pb-5">

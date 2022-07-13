@@ -1,7 +1,7 @@
 import React from "react";
-import { Form, Input, DatePicker, Select, Upload } from "antd";
+import { Form, Input, DatePicker, Select, message } from "antd";
 import { useDispatch, useSelector } from "react-redux";
-import { openCloseModal, putInfoUser } from "../../redux/userSlice";
+import { putInfoUser } from "../../../redux/userSlice";
 import moment from "moment";
 
 const { Option } = Select;
@@ -30,8 +30,9 @@ export default function FormInfoUser() {
   };
 
   const onFinishFailed = (errorInfo) => {
-    console.log("Failed:", errorInfo);
+    message.error("Sửa thông tin thất bại, vui lòng kiểm tra lại thông tin");
   };
+
   return (
     <div className="rounded-xl">
       <div>

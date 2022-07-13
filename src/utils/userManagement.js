@@ -1,5 +1,10 @@
 import userPic from "../assets/img/user_pic.png";
-import { openCloseModal, getInfoUser, getIdUserPut } from "../redux/userSlice";
+import {
+  openCloseModalEdit,
+  getInfoUser,
+  getIdUserPut,
+  deleteUser,
+} from "../redux/userSlice";
 
 export const columnsUserManagement = [
   {
@@ -50,23 +55,6 @@ export const columnsUserManagement = [
     },
   },
   {
-    title: "Hình ảnh",
-    dataIndex: "avatar",
-    key: "avatar",
-    align: "center",
-    render: (img) => {
-      return (
-        <div className="flex justify-center">
-          {img ? (
-            <img className="h-16 w-24" src={img} alt={img} />
-          ) : (
-            <img className="h-16 w-24" src={userPic} alt={userPic} />
-          )}
-        </div>
-      );
-    },
-  },
-  {
     title: "Số điện thoại",
     dataIndex: "phone",
     key: "phone",
@@ -91,12 +79,15 @@ export const columnsUserManagement = [
             onClick={() => (
               dispatch(getInfoUser(record._id)),
               dispatch(getIdUserPut(record._id)),
-              dispatch(openCloseModal(true))
+              dispatch(openCloseModalEdit(true))
             )}
           >
             Sửa
           </button>
-          <button className="text-white bg-red-600 px-4 py-2 rounded font-medium">
+          <button
+            className="text-white bg-red-600 px-4 py-2 rounded font-medium"
+            onClick={() => dispatch(deleteUser(record._id))}
+          >
             Xóa
           </button>
         </div>

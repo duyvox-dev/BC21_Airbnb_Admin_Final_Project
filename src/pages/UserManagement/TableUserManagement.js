@@ -3,7 +3,8 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { columnsUserManagement } from "../../utils/userManagement";
 import { getListUser } from "../../redux/userSlice";
-import ModalUserManagement from "./ModalUserManagement";
+import ModalUserManagement from "./EditInfoUser/ModalUserManagement";
+import ModalAddAdmin from "./AddAdmin/ModalAddAdmin.jsx";
 
 export default function TableUserManagement() {
   const { dataListUser } = useSelector((state) => state.userSlice);
@@ -11,21 +12,16 @@ export default function TableUserManagement() {
   let dispatch = useDispatch();
 
   useEffect(() => {
-    if (dataListUser) setData(dataListUser);
+    if (dataListUser) {
+      let arrNew = dataListUser.map((item) => {
+        return { ...item, action: dispatch };
+      });
+      setData(arrNew);
+    }
   }, [dataListUser]);
 
   useEffect(() => {
-    dispatch(getListUser())
-      .unwrap()
-      .then((res) => {
-        let arrNew = res?.map((item) => {
-          return { ...item, action: dispatch };
-        });
-        setData(arrNew);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    dispatch(getListUser());
   }, []);
 
   return (
@@ -37,6 +33,7 @@ export default function TableUserManagement() {
         rowKey={"_id"}
       />
       <ModalUserManagement />
+      <ModalAddAdmin />
     </>
   );
 }
