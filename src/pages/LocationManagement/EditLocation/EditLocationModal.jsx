@@ -3,12 +3,19 @@ import { useDispatch, useSelector } from "react-redux";
 import Modal from "../../../components/Modal/Modal";
 import { Dialog } from "@headlessui/react";
 import EditLocationForm from "./EditLocationForm";
-export default function EditLocationModal({ onClose = () => {}, isOpenModal }) {
-    const { currentLocation } = useSelector((state) => state.locationSlice);
+import { toggleEditLocationModal } from "../../../redux/locationSlice";
+export default function EditLocationModal() {
+    const dispatch = useDispatch();
+    const { currentLocation, modalEdit } = useSelector(
+        (state) => state.locationSlice
+    );
+    let onClose = () => {
+        dispatch(toggleEditLocationModal());
+    };
     return (
         <div>
             <Modal
-                isOpen={isOpenModal}
+                isOpen={modalEdit}
                 onClose={onClose}
                 children={
                     <Dialog.Panel className="w-full md:max-w-[30rem] lg:max-w-[35rem] max-w-[21rem] transform overflow-hidden rounded-2xl bg-white text-left align-middle shadow-xl transition-all">
@@ -20,7 +27,7 @@ export default function EditLocationModal({ onClose = () => {}, isOpenModal }) {
                         </Dialog.Title>
                         <div className="my-5">
                             <div className="p-5 space-y-3 overflow-y-scroll">
-                                {currentLocation ? <EditLocationForm /> : ""}
+                                {currentLocation ? <EditLocationForm /> : <></>}
                             </div>
                         </div>
                     </Dialog.Panel>

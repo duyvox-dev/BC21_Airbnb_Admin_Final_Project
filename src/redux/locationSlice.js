@@ -34,10 +34,8 @@ export const getLocationInfo = createAsyncThunk(
     async (locationId, thunkAPI) => {
         try {
             const result = await locationService.getLocationInfo(locationId);
-            // console.log(result.data);
             return result.data;
         } catch (error) {
-            // message.error(error.response.data.message);
             return thunkAPI.rejectWithValue();
         }
     }
@@ -48,6 +46,7 @@ export const deleteLocation = createAsyncThunk(
         try {
             const result = await locationService.deleteLocation(locationID);
             thunkAPI.dispatch(getLocationList());
+            message.success("Xoá vị trí thành công!");
             return result.data;
         } catch (error) {
             message.error(error.response.data.message);
@@ -57,14 +56,15 @@ export const deleteLocation = createAsyncThunk(
 );
 export const updateLocation = createAsyncThunk(
     "locationSlice/updateLocation",
-    async (locationID, locationData, thunkAPI) => {
+    async ({ locationID, locationData }, thunkAPI) => {
         try {
             const result = await locationService.updateLocationInfo(
                 locationID,
                 locationData
             );
+
             thunkAPI.dispatch(getLocationList());
-            return result.data;
+            // return result.data;
         } catch (error) {
             message.error(error.response.data.message);
             return thunkAPI.rejectWithValue();

@@ -55,6 +55,12 @@ export const columnsLocationManagement = [
         key: "country",
         align: "center",
     },
+    {
+        title: "Đánh giá",
+        dataIndex: "valueate",
+        key: "valueate",
+        align: "center",
+    },
 
     {
         title: "Thao tác",
