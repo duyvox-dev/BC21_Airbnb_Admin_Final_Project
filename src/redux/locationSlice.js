@@ -2,7 +2,7 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { locationService } from "../services/locationService";
 import { message } from "antd";
 export const createLocation = createAsyncThunk(
-    "locatiohSlice/createLocation",
+    "locationSlice/createLocation",
     async (locationInfo, thunkAPI) => {
         try {
             const result = await locationService.createLocation(locationInfo);
@@ -29,8 +29,21 @@ export const getLocationList = createAsyncThunk(
         }
     }
 );
+export const getLocationInfo = createAsyncThunk(
+    "locationSlice/getLocationList",
+    async (locationId, thunkAPI) => {
+        try {
+            const result = await locationService.getLocationInfo(locationId);
+            // console.log(result.data);
+            return result.data;
+        } catch (error) {
+            // message.error(error.response.data.message);
+            return thunkAPI.rejectWithValue();
+        }
+    }
+);
 export const deleteLocation = createAsyncThunk(
-    "locatiohSlice/deleteLocation",
+    "locationSlice/deleteLocation",
     async (locationID, thunkAPI) => {
         try {
             const result = await locationService.deleteLocation(locationID);
@@ -42,13 +55,34 @@ export const deleteLocation = createAsyncThunk(
         }
     }
 );
-
+export const updateLocation = createAsyncThunk(
+    "locationSlice/updateLocation",
+    async (locationID, locationData, thunkAPI) => {
+        try {
+            const result = await locationService.updateLocationInfo(
+                locationID,
+                locationData
+            );
+            thunkAPI.dispatch(getLocationList());
+            return result.data;
+        } catch (error) {
+            message.error(error.response.data.message);
+            return thunkAPI.rejectWithValue();
+        }
+    }
+);
 const locationSlice = createSlice({
     name: "locatiohSlice",
     initialState: {
         locationList: [],
+        currentLocation: {},
+        modalEdit: false,
     },
-    reducers: {},
+    reducers: {
+        toggleEditLocationModal: (state, action) => {
+            state.modalEdit = !state.modalEdit;
+        },
+    },
     extraReducers: {
         [getLocationList.pending]: (state, action) => {
             state.locationList = [];
@@ -57,7 +91,15 @@ const locationSlice = createSlice({
             state.locationList = action.payload;
         },
         [getLocationList.rejected]: (state, action) => {},
+        [getLocationInfo.pending]: (state, action) => {
+            state.currentLocation = [];
+        },
+        [getLocationInfo.fulfilled]: (state, action) => {
+            state.currentLocation = action.payload;
+        },
+        [getLocationInfo.rejected]: (state, action) => {},
     },
 });
 const { reducer, actions } = locationSlice;
+export const { toggleEditLocationModal } = actions;
 export default reducer;
