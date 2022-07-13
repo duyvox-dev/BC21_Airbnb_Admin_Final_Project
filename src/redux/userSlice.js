@@ -44,6 +44,7 @@ export const putInfoUser = createAsyncThunk(
   async ({ idUserPut, valueUpdate }, thunkAPI) => {
     try {
       const result = await userService.putInfouser(idUserPut, valueUpdate);
+      thunkAPI.dispatch(getListUser());
       message.success("Cập nhật thành công");
       return result.data;
     } catch (errors) {
@@ -59,6 +60,7 @@ export const deleteUser = createAsyncThunk(
   async (id, thunkAPI) => {
     try {
       const result = await userService.deleteUser(id);
+      thunkAPI.dispatch(getListUser());
       message.success("Xóa thành công");
       return result.data;
     } catch (errors) {
@@ -73,6 +75,7 @@ export const postAddUser = createAsyncThunk(
   async (data, thunkAPI) => {
     try {
       const result = await userService.postAddUser(data);
+      thunkAPI.dispatch(getListUser());
       message.success("Thêm quản trị viên thành công");
       return result.data;
     } catch (errors) {
@@ -131,40 +134,19 @@ export const userSlice = createSlice({
     [getInfoUser.pending]: (state) => {
       state.dataListUserAction = null;
     },
-    [putInfoUser.fulfilled]: (state, { payload }) => {
-      let dataUpdate = state.dataListUser.map((item) => {
-        if (item._id === payload._id) {
-          return (item = payload);
-        }
-        return item;
-      });
-      let dataUpdateSave = state.dataSave.map((item) => {
-        if (item._id === payload._id) {
-          return (item = payload);
-        }
-        return item;
-      });
-      state.dataListUser = dataUpdate;
-      state.dataSave = dataUpdateSave;
+    [putInfoUser.fulfilled]: (state) => {
       state.valueModalEdit = false;
+      state.valueInputSearch = "";
     },
     [putInfoUser.pending]: (state) => {
       state.valueModalEdit = true;
     },
-    [deleteUser.fulfilled]: (state, { payload }) => {
-      let dataUpdate = state.dataListUser.filter(
-        (item) => item._id !== payload._id
-      );
-      let dataUpdateSave = state.dataSave.filter(
-        (item) => item._id !== payload._id
-      );
-      state.dataListUser = dataUpdate;
-      state.dataSave = dataUpdateSave;
-    },
-    [postAddUser.fulfilled]: (state, { payload }) => {
-      state.dataListUser.push(payload);
-      state.dataSave.push(payload);
+    [postAddUser.fulfilled]: (state) => {
       state.valueModalAdd = false;
+      state.valueInputSearch = "";
+    },
+    [deleteUser.fulfilled]: (state) => {
+      state.valueInputSearch = "";
     },
     [postAddUser.rejected]: (state) => {
       state.valueModalAdd = true;
