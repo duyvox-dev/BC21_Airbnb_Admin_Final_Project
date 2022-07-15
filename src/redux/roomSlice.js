@@ -84,7 +84,7 @@ const refactorRoomListDataModel = (dataRaw = []) => {
 };
 
 export const getRoomList = createAsyncThunk(
-    "locatiohSlice/getLocationList",
+    "roomSlice/getRoomList",
     async (idLocation, thunkAPI) => {
         try {
             const result = await roomService.getRoomList(idLocation);

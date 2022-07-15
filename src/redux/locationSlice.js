@@ -56,7 +56,7 @@ const locationSlice = createSlice({
         [getLocationList.fulfilled]: (state, action) => {
             state.locationList = action.payload;
         },
-        [getLocationList.rejected]: (state, action) => {},
+        [getLocationList.rejected]: (state, action) => { },
     },
 });
 const { reducer, actions } = locationSlice;

@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { getRoomList, selectRoomList } from "../../redux/roomSlice";
 import TableRoomManagement from "./TableRoomManagement/TableRoomManagement";
 import styles from '../css/RoomManagement.css';
+import { getLocationList } from "../../redux/locationSlice";
 const { Search } = Input;
 
 export default function RoomManagement() {
@@ -20,12 +21,20 @@ export default function RoomManagement() {
 
   useEffect(() => {
     dispatch(getRoomList()); //Call API fetch roomList
+    dispatch(getLocationList()); //Call API fetch locationList
   }, []);
 
   let roomList = useSelector(selectRoomList); //Get roomList data from roomSlice redux state
+  let { locationList } = useSelector((state) => state.locationSlice); //Get locationList data from locationSlice redux state
 
   const onSearch = (value) => {//Get value from search input element
-    console.log(value);
+    if (locationList?.length > 0) {
+      let indexLocation = locationList.findIndex(location => location.province.toLowerCase() === value.toLowerCase());
+      console.log(indexLocation);
+      if (indexLocation !== -1) {
+        dispatch(getRoomList(locationList[indexLocation]?._id)); //Call API fetch roomList according to location id
+      };
+    };
   };
 
   return (
