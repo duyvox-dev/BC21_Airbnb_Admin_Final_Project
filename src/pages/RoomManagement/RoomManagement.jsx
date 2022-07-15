@@ -57,7 +57,9 @@ export default function RoomManagement() {
           />
           <p className="text-left text-red-500">* Nhập tên tỉnh thành đầy đủ và có dấu</p>
         </div>
-        <TableRoomManagement roomList={roomList} />
+        <div className="w-full">
+          <TableRoomManagement roomList={roomList} />
+        </div>
       </div>
     </div>
   );

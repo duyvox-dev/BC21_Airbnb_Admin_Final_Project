@@ -1,31 +1,31 @@
 import { httpService } from "./httpService";
 
 export const roomService = {
-    getRoomList: (idViTri = "") => {
-        if (idViTri.trim() !== "") {
-            return httpService.get(`/api/rooms?locationId=${idViTri}`);
+    getRoomList: (idLocation = "") => {
+        if (idLocation.trim() !== "") {
+            return httpService.get(`/api/rooms?locationId=${idLocation}`);
         } else {
             return httpService.get(`/api/rooms`);
         }
     },
 
-    getRoomInfo: (idPhong) => {
-        return httpService.get(`/api/rooms/${idPhong}`);
+    getRoomInfo: (indRoom) => {
+        return httpService.get(`/api/rooms/${indRoom}`);
     },
 
-    deleteRoom: (idPhong) => {
-        return httpService.delete(`/api/rooms/${idPhong}`);
+    deleteRoom: (indRoom) => {
+        return httpService.delete(`/api/rooms/${indRoom}`);
     },
 
     createRoom: (dataForm) => {
         return httpService.post(`/api/rooms`, dataForm);
     },
 
-    uploadRoomImage: (idPhong, dataForm) => {
-        return httpService.post(`/api/rooms/upload-image/${idPhong}`, dataForm);
+    uploadRoomImage: (indRoom, dataForm) => {
+        return httpService.post(`/api/rooms/upload-image/${indRoom}`, dataForm);
     },
 
-    upadteRoomInfo: (idPhong, dataForm) => {
-        return httpService.put(`/api/rooms${idPhong}`, dataForm);
+    upadteRoomInfo: (indRoom, dataForm) => {
+        return httpService.put(`/api/rooms/${indRoom}`, dataForm);
     },
 };

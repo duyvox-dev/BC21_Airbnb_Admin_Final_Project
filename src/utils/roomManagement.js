@@ -1,4 +1,3 @@
-import { Fragment } from "react";
 import { Popover } from 'antd';
 
 export const columnsRoomManagement = [
@@ -128,13 +127,23 @@ export const columnsRoomManagement = [
         dataIndex: "action",
         key: "action",
         align: "center",
-        render: (_, record) => {
+        render: (action, record) => {
             return (
                 <div className="flex justify-center space-x-4 w-full h-full">
-                    <button className="text-white bg-blue-600 px-4 py-2 rounded">
+                    <button
+                        className="text-white bg-blue-600 px-4 py-2 rounded"
+                        onClick={() => {
+                            action.editRoomAction(record._id);
+                        }}
+                    >
                         Sửa
                     </button>
-                    <button className="text-white bg-red-600 px-4 py-2 rounded">
+                    <button
+                        className="text-white bg-red-600 px-4 py-2 rounded"
+                        onClick={() => {
+                            action.deleteRoomAction(record._id);
+                        }}
+                    >
                         Xóa
                     </button>
                 </div>
