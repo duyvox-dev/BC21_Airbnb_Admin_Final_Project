@@ -62,6 +62,7 @@ const roomSlice = createSlice({
     name: "roomSlice",
     initialState: {
         roomList: [],
+        filteredRoomList: [],
         roomInfo: {},
         isFormEditOpen: false,
     },
@@ -71,6 +72,23 @@ const roomSlice = createSlice({
         },
         closeFormEditRoomInfo: (state, action) => {
             state.isFormEditOpen = false;
+        },
+
+        //Finding rooms according to location province name
+        searchRoomListByLocationName: (state, action) => {
+            let newRoomList = state.roomList.filter((room) => {
+                if (typeof room.name === "string") {//Check valid search input value must be string
+                    if (
+                        room?.locationId?.province
+                            .trim()
+                            .toUpperCase()
+                            .includes(action.payload.trim().toUpperCase())
+                    ) {//Search input value available in location province name
+                        return room;
+                    }
+                }
+            });
+            state.filteredRoomList = newRoomList;
         },
     },
     extraReducers: {
@@ -122,9 +140,10 @@ const roomSlice = createSlice({
 const { reducer, actions } = roomSlice;
 
 export const selectRoomList = (state) => state.roomSlice.roomList;
+export const selectFilteredRoomList = (state) => state.roomSlice.filteredRoomList;
 export const selectRoomInfo = (state) => state.roomSlice.roomInfo;
 export const selectFormEditStatus = (state) => state.roomSlice.isFormEditOpen;
 
-export const { openFormEditRoomInfo, closeFormEditRoomInfo } = actions;
+export const { openFormEditRoomInfo, closeFormEditRoomInfo, searchRoomListByLocationName } = actions;
 
 export default reducer;

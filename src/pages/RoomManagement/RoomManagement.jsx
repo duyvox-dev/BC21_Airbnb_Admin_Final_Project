@@ -1,11 +1,10 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Input } from 'antd';
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { getRoomList, selectRoomList } from "../../redux/roomSlice";
+import { getRoomList, searchRoomListByLocationName, selectFilteredRoomList, selectRoomList } from "../../redux/roomSlice";
 import TableRoomManagement from "./TableRoomManagement/TableRoomManagement";
 import styles from '../css/RoomManagement.css';
-import { getLocationList } from "../../redux/locationSlice";
 const { Search } = Input;
 
 export default function RoomManagement() {
@@ -21,22 +20,18 @@ export default function RoomManagement() {
 
   useEffect(() => {
     dispatch(getRoomList()); //Call API fetch roomList
-    dispatch(getLocationList()); //Call API fetch locationList
   }, []);
 
-  let roomList = useSelector(selectRoomList); //Get roomList data from roomSlice redux state
-  let { locationList } = useSelector((state) => state.locationSlice); //Get locationList data from locationSlice redux state
+  let allRooms = useSelector(selectRoomList); //Get all roomList data from roomSlice redux state
+  let filteredRooms = useSelector(selectFilteredRoomList) //Get filtered roomList data from roomSlice redux state
+  let [roomList, setRoomList] = useState(allRooms);//Default value is allRooms
 
-  const onSearch = (value) => {//Get value from search input element
-    if (locationList?.length > 0) {//Only finding room list if fetch API locationList successfully
-      if (value?.trim() !== '') {
-        let indexLocation = locationList.findIndex(location => location.province.toLowerCase() === value.toLowerCase()); //Finding index of location province
-        if (indexLocation !== -1) {
-          dispatch(getRoomList(locationList[indexLocation]?._id)); //Call API fetch roomList according to location id
-        };
-      } else { //fetch all roomList if input value is empty
-        dispatch(getRoomList());
-      };
+  const handleChangeSearchRoom = (e) => {//Search rooms according to location province name
+    if (e.target.value?.trim() !== '') {//If there is search input value
+      dispatch(searchRoomListByLocationName(e.target.value))
+      setRoomList(filteredRooms);
+    } else {//In case remove search input value after typing
+      setRoomList(allRooms);
     };
   };
 
@@ -53,12 +48,18 @@ export default function RoomManagement() {
             placeholder="Tìm kiếm phòng theo tên tỉnh thành"
             allowClear
             enterButton="Tìm kiếm"
-            onSearch={onSearch}
+            onChange={handleChangeSearchRoom}
           />
           <p className="text-left text-red-500">* Nhập tên tỉnh thành đầy đủ và có dấu</p>
         </div>
         <div className="w-full">
-          <TableRoomManagement roomList={roomList} />
+          <TableRoomManagement
+            roomList={
+              filteredRooms?.length > 0
+                ? roomList
+                : allRooms
+            }
+          />
         </div>
       </div>
     </div>
