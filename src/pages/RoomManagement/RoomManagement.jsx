@@ -28,11 +28,14 @@ export default function RoomManagement() {
   let { locationList } = useSelector((state) => state.locationSlice); //Get locationList data from locationSlice redux state
 
   const onSearch = (value) => {//Get value from search input element
-    if (locationList?.length > 0) {
-      let indexLocation = locationList.findIndex(location => location.province.toLowerCase() === value.toLowerCase());
-      console.log(indexLocation);
-      if (indexLocation !== -1) {
-        dispatch(getRoomList(locationList[indexLocation]?._id)); //Call API fetch roomList according to location id
+    if (locationList?.length > 0) {//Only finding room list if fetch API locationList successfully
+      if (value?.trim() !== '') {
+        let indexLocation = locationList.findIndex(location => location.province.toLowerCase() === value.toLowerCase()); //Finding index of location province
+        if (indexLocation !== -1) {
+          dispatch(getRoomList(locationList[indexLocation]?._id)); //Call API fetch roomList according to location id
+        };
+      } else { //fetch all roomList if input value is empty
+        dispatch(getRoomList());
       };
     };
   };
@@ -47,11 +50,12 @@ export default function RoomManagement() {
         </div>
         <div className="w-full">
           <Search
-            placeholder="Tìm kiếm phòng theo tên khu vực"
+            placeholder="Tìm kiếm phòng theo tên tỉnh thành"
             allowClear
             enterButton="Tìm kiếm"
             onSearch={onSearch}
           />
+          <p className="text-left text-red-500">* Nhập tên tỉnh thành đầy đủ và có dấu</p>
         </div>
         <TableRoomManagement roomList={roomList} />
       </div>
