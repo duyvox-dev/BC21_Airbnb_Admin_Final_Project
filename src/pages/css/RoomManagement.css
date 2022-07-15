@@ -1,0 +1,14 @@
+@tailwind components;
+@layer components {
+  .room-management-page .ant-input-affix-wrapper:not(.ant-input-affix-wrapper-disabled):hover {
+    @apply border-rose-500;
+  }
+  .room-management-page .ant-input-affix-wrapper-focused {
+    @apply border-rose-500;
+    @apply shadow-none;
+  }
+  .room-management-page .ant-input-group-addon .ant-btn {
+    @apply bg-rose-500 border-rose-500;
+  }
+}
+/*# sourceMappingURL=RoomManagement.css.map */
