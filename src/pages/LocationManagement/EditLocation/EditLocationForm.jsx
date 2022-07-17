@@ -1,7 +1,10 @@
 import React, { useEffect } from "react";
 import { Form, Input, message, InputNumber } from "antd";
 import { useDispatch, useSelector } from "react-redux";
-import { updateLocation } from "../../../redux/locationSlice";
+import {
+    toggleEditLocationModal,
+    updateLocation,
+} from "../../../redux/locationSlice";
 import { isEmptyObject } from "../../../utils/objectUtils";
 export default function EditLocationForm() {
     const dispatch = useDispatch();
@@ -26,6 +29,7 @@ export default function EditLocationForm() {
         message.error(
             "Sửa thông tin thất bại, vui lòng kiểm tra lại thông tin"
         );
+        dispatch(toggleEditLocationModal());
     };
     return (
         <div>

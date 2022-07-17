@@ -6,8 +6,10 @@ export const createLocation = createAsyncThunk(
     async (locationInfo, thunkAPI) => {
         try {
             const result = await locationService.createLocation(locationInfo);
+            thunkAPI.dispatch(toggleAddLocationModal());
+            thunkAPI.dispatch(getLocationList());
+
             message.success(result.data.message);
-            // console.log(result.data);
             return result.data;
         } catch (error) {
             // message.error(error.response.data.message);
@@ -63,6 +65,7 @@ export const updateLocation = createAsyncThunk(
                 locationData
             );
 
+            thunkAPI.dispatch(toggleEditLocationModal());
             thunkAPI.dispatch(getLocationList());
             // return result.data;
         } catch (error) {
@@ -77,10 +80,14 @@ const locationSlice = createSlice({
         locationList: [],
         currentLocation: {},
         modalEdit: false,
+        modalAdd: false,
     },
     reducers: {
         toggleEditLocationModal: (state, action) => {
             state.modalEdit = !state.modalEdit;
+        },
+        toggleAddLocationModal: (state, action) => {
+            state.modalAdd = !state.modalAdd;
         },
     },
     extraReducers: {
@@ -101,5 +108,5 @@ const locationSlice = createSlice({
     },
 });
 const { reducer, actions } = locationSlice;
-export const { toggleEditLocationModal } = actions;
+export const { toggleEditLocationModal, toggleAddLocationModal } = actions;
 export default reducer;
