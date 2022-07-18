@@ -1,8 +1,8 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useFormik, Field, ErrorMessage } from 'formik';
+import { useFormik } from 'formik';
 import { Form, Input, InputNumber, Switch } from 'antd';
-import { closeFormEditRoomInfo, editRoom } from '../../../redux/roomSlice';
+import { closeFormEditRoomInfo, editRoom, uploadImage } from '../../../redux/roomSlice';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCircleXmark } from '@fortawesome/free-solid-svg-icons';
 import { getLocationList } from '../../../redux/locationSlice';
@@ -29,6 +29,7 @@ export default function FormEditRoomInfo({ roomInfo }) {
     let formik = useFormik({
         enableReinitialize: true,
         initialValues: {
+            image: null,
             name: roomInfo.name,
             price: roomInfo.price,
             bath: roomInfo.bath,
@@ -50,11 +51,54 @@ export default function FormEditRoomInfo({ roomInfo }) {
         onSubmit: (values) => {
             let data = {
                 idRoom: roomInfo._id,
-                formData: values,
+                formData: {
+                    name: values.name,
+                    price: values.price,
+                    bath: values.bath,
+                    bedRoom: values.bedRoom,
+                    description: values.description,
+                    guests: values.guests,
+                    locationId: idLocation,
+                    wifi: values.wifi,
+                    pool: values.pool,
+                    indoorFireplace: values.indoorFireplace,
+                    kitchen: values.kitchen,
+                    cableTV: values.cableTV,
+                    dryer: values.dryer,
+                    elevator: values.elevator,
+                    gym: values.gym,
+                    heating: values.heating,
+                    hotTub: values.hotTub,
+                },
             };
             dispatch(editRoom(data));
+
+            //Create image form data in order to call API send to server
+            let formData = new FormData();
+            formData.append('image', values.image);
+            let dataImage = {
+                idRoom: roomInfo._id,
+                formData: formData,
+            };
+            dispatch(uploadImage(dataImage));
         },
     });
+
+    let [imgUrl, setImgUrl] = useState('');
+
+    const handleUploadImage = (e) => {
+        //Get file from event
+        let file = e.target.files[0];
+        formik.setFieldValue('image', file);
+
+        //Create file reader
+        let reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = (e) => {
+            let image = e.target.result;
+            setImgUrl(image);
+        }
+    };
 
     return (
         <div className='form-edit-room-info-page w-11/12 mx-auto px-2 py-2 bg-white rounded-md'>
@@ -170,9 +214,28 @@ export default function FormEditRoomInfo({ roomInfo }) {
                         </Form.Item>
                     </div>
 
+                    <Form.Item
+                        label='Hình ảnh phòng'
+                    >
+                        <img
+                            className='w-96'
+                            src={imgUrl ? imgUrl : roomInfo.image} //Display new uploaded image replace old one
+                        />
+                        <input
+                            type='file'
+                            id="upload-photo"
+                            className='absolute top-0 left-0 -z-10 cursor-none'
+                            onChange={handleUploadImage}
+                        />
+                    </Form.Item>
 
 
-                    <div className='w-full flex justify-end mt-5 mb-2'>
+                    <div className='w-full flex justify-between mt-5 mb-2'>
+                        <label
+                            htmlFor="upload-photo"
+                            className='border border-gray-300 px-3 py-1 my-auto cursor-pointer hover:bg-gray-200'>
+                            Tải hình ảnh mới
+                        </label>
                         <button
                             type='submit'
                             className='text-base font-bold py-2 px-4 text-white bg-rose-500 rounded-lg'

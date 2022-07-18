@@ -32,7 +32,7 @@ export default function TableRoomManagement({ roomList }) {
 
     const handleEditRoom = (idRoom) => {
         dispatch(getRoomInfo(idRoom));
-        window.scrollTo(0, 120);
+        window.scrollTo(0, 200);
     };
 
     const handleDeleteRoom = (idRoom) => {

@@ -4,6 +4,24 @@ import { roomService } from "../services/roomService";
 import _ from 'lodash';
 import { locationService } from "../services/locationService";
 
+let initialState = {
+    roomList: [],
+    filteredRoomList: [],
+    roomInfo: {},
+    isFormEditOpen: false,
+    isFormAddNewRoomOpen: false,
+};
+
+const getLocationInfor = async (locationId, initRoomData) => {
+    const result = await locationService.getLocationInfo(locationId); //Find location details according to locationID
+
+    let roomData = {//Add location details to roomInfo object
+        ...initRoomData,
+        locationId: result.data,
+    };
+    return roomData;
+};
+
 export const getRoomList = createAsyncThunk(
     "roomSlice/getRoomList",
     async (idLocation, thunkAPI) => {
@@ -50,16 +68,17 @@ export const editRoom = createAsyncThunk(
     async (data, thunkAPI) => {
         try {
             let { idRoom, formData } = data;
-            const editRoomResult = await roomService.upadteRoomInfo(idRoom, formData);
+            const result = await roomService.upadteRoomInfo(idRoom, formData);
             message.success('Cập nhật thông tin phòng thành công!');
 
-            const searchLocationInfoResult = await locationService.getLocationInfo(editRoomResult.data.locationId); //Find location details according to locationID
+            return getLocationInfor(result.data.locationId, result.data);
+            // const searchLocationInfoResult = await locationService.getLocationInfo(editRoomResult.data.locationId); //Find location details according to locationID
 
-            let refinedResult = {//Add location details to roomInfo object
-                ...editRoomResult.data,
-                locationId: searchLocationInfoResult.data,
-            };
-            return refinedResult;
+            // let refinedResult = {//Add location details to roomInfo object
+            //     ...editRoomResult.data,
+            //     locationId: searchLocationInfoResult.data,
+            // };
+            // return refinedResult;
         } catch (error) {
             // message.error(error.response.data.message);
             return thunkAPI.rejectWithValue();
@@ -67,15 +86,55 @@ export const editRoom = createAsyncThunk(
     }
 );
 
+export const addRoom = createAsyncThunk(
+    'roomSlice/addRoom',
+    async (formData, thunkAPI) => {
+        try {
+            //Search room list in order to check the new room information is inexistent
+            const roomListResult = await roomService.getRoomList(formData.locationId);
+            let roomList = roomListResult.data;
+            let roomExisted = false;
+
+            for (let room of roomList) {
+                if (room.name.localeCompare(formData.name, undefined, { sensitivity: 'base' }) === 0) {
+                    roomExisted = true;
+                }
+            };
+
+            if (roomExisted) {
+                message.error('Phòng đã tồn tại, vui lòng kiểm tra lại!');
+                throw new Error('Phòng đã tồn tại, vui lòng kiểm tra lại!');
+            } else {
+                const result = await roomService.createRoom(formData);
+                message.success('Thêm phòng mới thành công!');
+                return getLocationInfor(result.data.locationId, result.data);
+            }
+        } catch (error) {
+            // message.error(error.response.data.message);
+            return thunkAPI.rejectWithValue();
+        }
+    }
+);
+
+export const uploadImage = createAsyncThunk(
+    'roomSlice/uploadImage',
+    async (dataImage, thunkAPI) => {
+        try {
+            let { idRoom, formData } = dataImage;
+            let result = await roomService.uploadRoomImage(idRoom, formData);
+            console.log(result.data);
+            return result.data;
+        } catch (error) {
+            // message.error(error.response.data.message);
+            console.log(error.response);
+            return thunkAPI.rejectWithValue();
+        }
+    }
+);
+
 const roomSlice = createSlice({
     name: "roomSlice",
-    initialState: {
-        roomList: [],
-        filteredRoomList: [],
-        roomInfo: {},
-        isFormEditOpen: false,
-        isFormAddNewRoomOpen: false,
-    },
+    initialState: initialState,
     reducers: {
         openFormEditRoomInfo: (state, action) => {
             state.isFormEditOpen = true;
@@ -139,7 +198,8 @@ const roomSlice = createSlice({
                     return room._id === action.payload._id;
                 });
                 if (indexEditedRoomFiltered !== -1) {
-                    state.filteredRoomList[indexEditedRoomFiltered] = action.payload;
+                    filteredRoomListClone[indexEditedRoomFiltered] = action.payload;
+                    state.filteredRoomList = filteredRoomListClone;
                 };
 
                 let roomListClone = [...state.roomList];
@@ -155,20 +215,63 @@ const roomSlice = createSlice({
                     return room._id === action.payload._id;
                 });
                 if (indexEditedRoom !== -1) {
-                    state.roomList[indexEditedRoom] = action.payload;
+                    roomListClone[indexEditedRoom] = action.payload;
+                    state.filteredRoomList = roomListClone;
                 };
+            }
+        },
+
+        [addRoom.pending]: (state, action) => {
+            state.isFormAddNewRoomOpen = false;
+        },
+
+        [addRoom.fulfilled]: (state, action) => {
+            //Update new room at redux state
+            if (state.filteredRoomList?.length > 0) {//Admin searched before add new room
+                let filteredRoomListClone = [...state.filteredRoomList];
+                filteredRoomListClone.push(action.payload);
+                state.filteredRoomList = filteredRoomListClone;
+
+                let roomListClone = [...state.roomList];
+                roomListClone.push(action.payload);
+                state.roomList = roomListClone;
+            } else {//Admin direct add new room without searching
+                let roomListClone = [...state.roomList];
+                roomListClone.push(action.payload);
+                state.roomList = roomListClone;
             }
         },
 
         [deleteRoom.fulfilled]: (state, action) => {
             //Delete the room at redux state
-            let roomListClone = [...state.roomList];
-            let indexEditedRoom = roomListClone.findIndex(room => {
-                return room._id === action.payload._id;
-            });
-            if (indexEditedRoom !== -1) {
-                state.roomList.splice(indexEditedRoom, 1);
-            };
+            if (state.filteredRoomList?.length > 0) {//Admin searched before add new room
+                let filteredRoomListClone = [...state.filteredRoomList];
+                let indexEditedRoomFiltered = filteredRoomListClone.findIndex(room => {
+                    return room._id === action.payload._id;
+                });
+                if (indexEditedRoomFiltered !== -1) {
+                    filteredRoomListClone.splice(indexEditedRoomFiltered, 1);
+                    state.filteredRoomList = filteredRoomListClone;
+                };
+
+                let roomListClone = [...state.roomList];
+                let indexEditedRoom = roomListClone.findIndex(room => {
+                    return room._id === action.payload._id;
+                });
+                if (indexEditedRoom !== -1) {
+                    roomListClone.splice(indexEditedRoom, 1);
+                    state.roomList = roomListClone;
+                };
+            } else {//Admin direct add new room without searching
+                let roomListClone = [...state.roomList];
+                let indexEditedRoom = roomListClone.findIndex(room => {
+                    return room._id === action.payload._id;
+                });
+                if (indexEditedRoom !== -1) {
+                    roomListClone.splice(indexEditedRoom, 1);
+                    state.roomList = roomListClone;
+                };
+            }
         },
     },
 });

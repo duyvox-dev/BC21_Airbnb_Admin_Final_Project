@@ -85,7 +85,7 @@ export default function RoomManagement() {
         formAddNewRoomStatus
           ? <div className='w-full absolute top-0 z-10'>
             <div className="bg-black/30 fixed inset-0" ref={ref} />
-            <div className='w-11/12 absolute top-14 left-14'>
+            <div className='w-11/12 absolute top-5 left-14'>
               <FormAddNewRoom />
             </div>
           </div>

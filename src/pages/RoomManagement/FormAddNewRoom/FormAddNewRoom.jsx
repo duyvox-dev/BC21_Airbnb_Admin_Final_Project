@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useFormik } from 'formik';
-import { Form, Input, InputNumber, Select, Switch } from 'antd';
-import { closeFormAddNewRoomInfo } from '../../../redux/roomSlice';
+import { Form, Input, InputNumber, message, Select, Switch } from 'antd';
+import { addRoom, closeFormAddNewRoomInfo } from '../../../redux/roomSlice';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCircleXmark } from '@fortawesome/free-solid-svg-icons';
 import { getLocationList } from '../../../redux/locationSlice';
+import _ from 'lodash';
 
 const { TextArea } = Input;
 
@@ -31,24 +32,35 @@ export default function FormAddNewRoom(props) {
             description: '',
             guests: 0,
             locationId: '',
-            wifi: null,
-            pool: null,
-            indoorFireplace: null,
-            kitchen: null,
-            cableTV: null,
-            dryer: null,
-            elevator: null,
-            gym: null,
-            heating: null,
-            hotTub: null,
+            wifi: false,
+            pool: false,
+            indoorFireplace: false,
+            kitchen: false,
+            cableTV: false,
+            dryer: false,
+            elevator: false,
+            gym: false,
+            heating: false,
+            hotTub: false,
         },
         onSubmit: (values) => {
-            console.log(values);
-            // dispatch();
+            if (
+                _.trim(values.name) !== '' &&
+                _.trim(values.description) !== '' &&
+                _.trim(values.locationId) !== '' &&
+                values.price > 0 &&
+                values.bath > 0 &&
+                values.bedRoom > 0 &&
+                values.guests > 0
+            ) {
+                dispatch(addRoom(values));//Call API send new room information to server
+            } else {
+                message.error('Vui lòng điền đầy đủ thông tin!');
+            }
         },
     });
 
-    const renderLocationProvinceList = () => {
+    const renderLocationProvinceList = () => {//Render province list
         return locationList.map((location, index) => {
             return <Select.Option
                 key={index}
@@ -58,7 +70,7 @@ export default function FormAddNewRoom(props) {
         })
     };
 
-    const renderLocationNameList = () => {
+    const renderLocationNameList = () => {//Render location name according to chosen province
         return locationList.filter(location => location.province === locationProvince).map((location, index) => {
             return <Select.Option
                 key={index}
@@ -68,11 +80,11 @@ export default function FormAddNewRoom(props) {
         })
     };
 
-    const handleLocationProvinceChange = (value) => {
+    const handleLocationProvinceChange = (value) => {//Get the province selection
         setLocationProvince(value)
     };
 
-    const handleLocationNameChange = (value) => {
+    const handleLocationNameChange = (value) => {//Get the location name selection & find locationId
         setLocationName(value)
         let indexLocationName = locationList.findIndex(location => {
             return location.name === value;

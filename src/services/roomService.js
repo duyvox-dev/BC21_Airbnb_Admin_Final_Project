@@ -21,8 +21,8 @@ export const roomService = {
         return httpService.post(`/api/rooms`, dataForm);
     },
 
-    uploadRoomImage: (indRoom, dataForm) => {
-        return httpService.post(`/api/rooms/upload-image/${indRoom}`, dataForm);
+    uploadRoomImage: (idRoom, formData) => {
+        return httpService.post(`/api/rooms/upload-image/${idRoom}`, formData);
     },
 
     upadteRoomInfo: (indRoom, dataForm) => {
