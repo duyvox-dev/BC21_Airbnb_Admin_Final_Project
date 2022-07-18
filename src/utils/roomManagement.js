@@ -133,7 +133,7 @@ export const columnsRoomManagement = [
                     <button
                         className="text-white bg-blue-600 px-4 py-2 rounded"
                         onClick={() => {
-                            action.editRoomAction(record._id);
+                            action.editRoomAction(record._id);//Pass roomID getting the room information in order to edit
                         }}
                     >
                         Sửa
@@ -141,7 +141,7 @@ export const columnsRoomManagement = [
                     <button
                         className="text-white bg-red-600 px-4 py-2 rounded"
                         onClick={() => {
-                            action.deleteRoomAction(record._id);
+                            action.deleteRoomAction(record._id);//Pass roomID in order to delete the room
                         }}
                     >
                         Xóa

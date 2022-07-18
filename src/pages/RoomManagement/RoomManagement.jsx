@@ -18,13 +18,19 @@ export default function RoomManagement() {
     if (!isLoggedIn) navigate("/");
   }, [isLoggedIn]);
 
+
+
+  let allRooms = useSelector(selectRoomList); //Get all roomList data from roomSlice redux state
+  let filteredRooms = useSelector(selectFilteredRoomList) //Get filtered roomList data from roomSlice redux state
+  let [roomList, setRoomList] = useState([]);//Default value is allRooms
+
   useEffect(() => {
     dispatch(getRoomList()); //Call API fetch roomList
   }, []);
 
-  let allRooms = useSelector(selectRoomList); //Get all roomList data from roomSlice redux state
-  let filteredRooms = useSelector(selectFilteredRoomList) //Get filtered roomList data from roomSlice redux state
-  let [roomList, setRoomList] = useState(allRooms);//Default value is allRooms
+  useEffect(() => {//re-render filteredRooms after admin edited room information
+    setRoomList(filteredRooms);
+  }, [filteredRooms]);
 
   const handleChangeSearchRoom = (e) => {//Search rooms according to location province name
     if (e.target.value?.trim() !== '') {//If there is search input value

@@ -1,6 +1,8 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { message } from "antd";
 import { roomService } from "../services/roomService";
+import _ from 'lodash';
+import { locationService } from "../services/locationService";
 
 export const getRoomList = createAsyncThunk(
     "roomSlice/getRoomList",
@@ -30,7 +32,7 @@ export const deleteRoom = createAsyncThunk(
     }
 );
 
-export const getRoomInfo = createAsyncThunk(
+export const getRoomInfo = createAsyncThunk(//Get the room information by roomID after click edit button
     "roomSlice/getRoomInfo",
     async (idRoom, thunkAPI) => {
         try {
@@ -47,10 +49,17 @@ export const editRoom = createAsyncThunk(
     "roomSlice/editRoom",
     async (data, thunkAPI) => {
         try {
-            let { idRoom, formData } = data;
-            const result = await roomService.upadteRoomInfo(idRoom, formData);
-            message.success('Cập nhật thông tin phòng thành công!')
-            return result.data;
+            let { idRoom, formData, locationId } = data;
+            const editRoomResult = await roomService.upadteRoomInfo(idRoom, formData);
+            message.success('Cập nhật thông tin phòng thành công!');
+
+            const searchLocationInfoResult = await locationService.getLocationInfo(editRoomResult.data.locationId); //Find location details according to locationID
+
+            let refinedResult = {//Add location details to roomInfo object
+                ...editRoomResult.data,
+                locationId: searchLocationInfoResult.data,
+            };
+            return refinedResult;
         } catch (error) {
             // message.error(error.response.data.message);
             return thunkAPI.rejectWithValue();
@@ -80,9 +89,9 @@ const roomSlice = createSlice({
                 if (typeof room.name === "string") {//Check valid search input value must be string
                     if (
                         room?.locationId?.province
-                            .trim()
+                            ?.trim()
                             .toUpperCase()
-                            .includes(action.payload.trim().toUpperCase())
+                            .includes(_.trim(action.payload).toUpperCase())
                     ) {//Search input value available in location province name
                         return room;
                     }
@@ -116,13 +125,31 @@ const roomSlice = createSlice({
         },
         [editRoom.fulfilled]: (state, action) => {
             //Update new info of the room at redux state
-            let roomListClone = [...state.roomList];
-            let indexEditedRoom = roomListClone.findIndex(room => {
-                return room._id === action.payload._id;
-            });
-            if (indexEditedRoom !== -1) {
-                state.roomList[indexEditedRoom] = action.payload;
-            };
+            if (state.filteredRoomList?.length > 0) {//Admin search the room before edit information
+                let filteredRoomListClone = [...state.filteredRoomList];
+                let indexEditedRoomFiltered = filteredRoomListClone.findIndex(room => {
+                    return room._id === action.payload._id;
+                });
+                if (indexEditedRoomFiltered !== -1) {
+                    state.filteredRoomList[indexEditedRoomFiltered] = action.payload;
+                };
+
+                let roomListClone = [...state.roomList];
+                let indexEditedRoom = roomListClone.findIndex(room => {
+                    return room._id === action.payload._id;
+                });
+                if (indexEditedRoom !== -1) {
+                    state.roomList[indexEditedRoom] = action.payload;
+                };
+            } else {//Admin access direct to the room editing information
+                let roomListClone = [...state.roomList];
+                let indexEditedRoom = roomListClone.findIndex(room => {
+                    return room._id === action.payload._id;
+                });
+                if (indexEditedRoom !== -1) {
+                    state.roomList[indexEditedRoom] = action.payload;
+                };
+            }
         },
 
         [deleteRoom.fulfilled]: (state, action) => {

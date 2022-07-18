@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useRef } from 'react';
+import React, { Fragment, useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Table } from "antd";
 import { columnsRoomManagement } from '../../../utils/roomManagement';
@@ -19,7 +19,6 @@ import hotTubIcon from '../../../assets/img/room-convenience/bath-tub.png';
 export default function TableRoomManagement({ roomList }) {
 
     let dispatch = useDispatch();
-    let navigate = useNavigate();
 
     //Control display status of form edit room info when click outside to close it
     const ref = useRef();
@@ -123,7 +122,7 @@ export default function TableRoomManagement({ roomList }) {
 
     let roomInfo = useSelector(selectRoomInfo);
     let formEditStatus = useSelector(selectFormEditStatus);
-
+    
     return (
         <div className='w-full relative'>
             <Table
