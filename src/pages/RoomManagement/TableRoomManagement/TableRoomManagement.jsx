@@ -1,9 +1,8 @@
-import React, { Fragment, useEffect, useRef, useState } from 'react';
+import React, { Fragment, useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Table } from "antd";
 import { columnsRoomManagement } from '../../../utils/roomManagement';
 import { closeFormEditRoomInfo, deleteRoom, getRoomInfo, selectFormEditStatus, selectRoomInfo } from '../../../redux/roomSlice';
-import { useNavigate } from 'react-router-dom';
 import FormEditRoomInfo from '../FormEditRoomInfo/FormEditRoomInfo';
 import wifiIcon from '../../../assets/img/room-convenience/wifi.png';
 import poolIcon from '../../../assets/img/room-convenience/pool.png';
@@ -122,7 +121,7 @@ export default function TableRoomManagement({ roomList }) {
 
     let roomInfo = useSelector(selectRoomInfo);
     let formEditStatus = useSelector(selectFormEditStatus);
-    
+
     return (
         <div className='w-full relative'>
             <Table

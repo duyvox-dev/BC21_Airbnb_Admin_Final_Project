@@ -74,6 +74,7 @@ const roomSlice = createSlice({
         filteredRoomList: [],
         roomInfo: {},
         isFormEditOpen: false,
+        isFormAddNewRoomOpen: false,
     },
     reducers: {
         openFormEditRoomInfo: (state, action) => {
@@ -81,6 +82,13 @@ const roomSlice = createSlice({
         },
         closeFormEditRoomInfo: (state, action) => {
             state.isFormEditOpen = false;
+        },
+
+        openFormAddNewRoomInfo: (state, action) => {
+            state.isFormAddNewRoomOpen = true;
+        },
+        closeFormAddNewRoomInfo: (state, action) => {
+            state.isFormAddNewRoomOpen = false;
         },
 
         //Finding rooms according to location province name
@@ -170,7 +178,8 @@ export const selectRoomList = (state) => state.roomSlice.roomList;
 export const selectFilteredRoomList = (state) => state.roomSlice.filteredRoomList;
 export const selectRoomInfo = (state) => state.roomSlice.roomInfo;
 export const selectFormEditStatus = (state) => state.roomSlice.isFormEditOpen;
+export const selectFormAddNewRoomStatus = (state) => state.roomSlice.isFormAddNewRoomOpen;
 
-export const { openFormEditRoomInfo, closeFormEditRoomInfo, searchRoomListByLocationName } = actions;
+export const { closeFormAddNewRoomInfo, openFormAddNewRoomInfo, openFormEditRoomInfo, closeFormEditRoomInfo, searchRoomListByLocationName } = actions;
 
 export default reducer;

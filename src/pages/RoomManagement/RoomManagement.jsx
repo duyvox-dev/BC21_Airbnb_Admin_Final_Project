@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React, { Fragment, useEffect, useRef, useState } from "react";
 import { Input } from 'antd';
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { getRoomList, searchRoomListByLocationName, selectFilteredRoomList, selectRoomList } from "../../redux/roomSlice";
+import { closeFormAddNewRoomInfo, getRoomList, openFormAddNewRoomInfo, searchRoomListByLocationName, selectFilteredRoomList, selectFormAddNewRoomStatus, selectRoomList } from "../../redux/roomSlice";
 import TableRoomManagement from "./TableRoomManagement/TableRoomManagement";
 import styles from '../css/RoomManagement.css';
+import FormAddNewRoom from "./FormAddNewRoom/FormAddNewRoom";
 const { Search } = Input;
 
 export default function RoomManagement() {
@@ -18,7 +19,17 @@ export default function RoomManagement() {
     if (!isLoggedIn) navigate("/");
   }, [isLoggedIn]);
 
-
+  //Control display status of form edit room info when click outside to close it
+  let formAddNewRoomStatus = useSelector(selectFormAddNewRoomStatus);
+  const ref = useRef();
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (ref.current?.contains(event.target)) {
+        dispatch(closeFormAddNewRoomInfo());
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+  }, [ref]);
 
   let allRooms = useSelector(selectRoomList); //Get all roomList data from roomSlice redux state
   let filteredRooms = useSelector(selectFilteredRoomList) //Get filtered roomList data from roomSlice redux state
@@ -45,7 +56,9 @@ export default function RoomManagement() {
     <div className="room-management-page">
       <div className="pl-72 pr-12 space-y-5">
         <div className="w-full flex justify-end">
-          <span className="inline-block mt-5 text-white bg-rose-500 px-5 py-1 cursor-pointer rounded">
+          <span
+            className="inline-block mt-5 text-white bg-rose-500 px-5 py-1 cursor-pointer rounded"
+            onClick={() => { dispatch(openFormAddNewRoomInfo()) }}>
             Thêm phòng mới
           </span>
         </div>
@@ -68,6 +81,16 @@ export default function RoomManagement() {
           />
         </div>
       </div>
+      {
+        formAddNewRoomStatus
+          ? <div className='w-full absolute top-0 z-10'>
+            <div className="bg-black/30 fixed inset-0" ref={ref} />
+            <div className='w-11/12 absolute top-14 left-14'>
+              <FormAddNewRoom />
+            </div>
+          </div>
+          : <Fragment />
+      }
     </div>
   );
 }
