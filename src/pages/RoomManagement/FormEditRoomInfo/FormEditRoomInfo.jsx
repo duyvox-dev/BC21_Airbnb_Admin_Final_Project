@@ -51,7 +51,6 @@ export default function FormEditRoomInfo({ roomInfo }) {
             let data = {
                 idRoom: roomInfo._id,
                 formData: values,
-                locationId: roomInfo.locationId,
             };
             dispatch(editRoom(data));
         },

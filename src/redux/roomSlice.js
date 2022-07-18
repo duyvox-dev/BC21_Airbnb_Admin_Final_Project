@@ -49,7 +49,7 @@ export const editRoom = createAsyncThunk(
     "roomSlice/editRoom",
     async (data, thunkAPI) => {
         try {
-            let { idRoom, formData, locationId } = data;
+            let { idRoom, formData } = data;
             const editRoomResult = await roomService.upadteRoomInfo(idRoom, formData);
             message.success('Cập nhật thông tin phòng thành công!');
 
