@@ -1,3 +1,8 @@
+import {
+    deleteLocation,
+    toggleEditLocationModal,
+    getLocationInfo,
+} from "../redux/locationSlice";
 export const columnsLocationManagement = [
     {
         title: "Tên",
@@ -50,19 +55,34 @@ export const columnsLocationManagement = [
         key: "country",
         align: "center",
     },
+    {
+        title: "Đánh giá",
+        dataIndex: "valueate",
+        key: "valueate",
+        align: "center",
+    },
 
     {
         title: "Thao tác",
         dataIndex: "action",
         key: "action",
         align: "center",
-        render: (_, record) => {
+        render: (dispatch, record) => {
             return (
                 <div className="flex justify-center space-x-4 w-full h-full">
-                    <button className="text-white bg-blue-600 px-4 py-2 rounded">
+                    <button
+                        className="text-white bg-blue-600 px-4 py-2 rounded"
+                        onClick={() => {
+                            dispatch(getLocationInfo(record._id));
+                            dispatch(toggleEditLocationModal());
+                        }}
+                    >
                         Sửa
                     </button>
-                    <button className="text-white bg-red-600 px-4 py-2 rounded">
+                    <button
+                        className="text-white bg-red-600 px-4 py-2 rounded"
+                        onClick={() => dispatch(deleteLocation(record._id))}
+                    >
                         Xóa
                     </button>
                 </div>
