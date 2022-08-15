@@ -14,7 +14,7 @@ export default function LocationManagement() {
     let navigate = useNavigate();
     const dispatch = useDispatch();
     const [searchKey, setSearchKey] = useState("");
-    document.title = "Location Management - Airbnb";
+
     useEffect(() => {
         if (!isLoggedIn) navigate("/");
     }, [isLoggedIn]);
@@ -29,6 +29,7 @@ export default function LocationManagement() {
         setSearchKey(searchValue);
         dispatch(filterLocation(searchValue));
     };
+    document.title = "Airbnb | Quản lý vị trí";
     return (
         <div>
             <EditLocationModal />
