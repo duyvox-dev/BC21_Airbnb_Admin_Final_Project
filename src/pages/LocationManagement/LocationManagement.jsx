@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import {
+    filterLocation,
     getLocationList,
     toggleAddLocationModal,
 } from "../../redux/locationSlice";
@@ -26,6 +27,7 @@ export default function LocationManagement() {
     };
     const handleSearch = (searchValue) => {
         setSearchKey(searchValue);
+        dispatch(filterLocation(searchValue));
     };
     return (
         <div>

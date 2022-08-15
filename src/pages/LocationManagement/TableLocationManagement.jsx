@@ -4,18 +4,20 @@ import { columnsLocationManagement } from "../../utils/locationManagement";
 import { useDispatch, useSelector } from "react-redux";
 import { getLocationList } from "../../redux/locationSlice";
 export default function TableLocationManagement() {
-    const { locationList } = useSelector((state) => state.locationSlice);
+    const { locationFilterredList } = useSelector(
+        (state) => state.locationSlice
+    );
     const [locationData, setLocationData] = useState([]);
     const dispatch = useDispatch();
 
     useEffect(() => {
-        if (locationList) {
-            let arrNew = locationList.map((item) => {
+        if (locationFilterredList) {
+            let arrNew = locationFilterredList.map((item) => {
                 return { ...item, action: dispatch };
             });
             setLocationData(arrNew);
         }
-    }, [locationList]);
+    }, [locationFilterredList]);
     useEffect(() => {
         dispatch(getLocationList());
     }, []);

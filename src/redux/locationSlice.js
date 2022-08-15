@@ -1,4 +1,4 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice, createAction } from "@reduxjs/toolkit";
 import { locationService } from "../services/locationService";
 import { message } from "antd";
 export const createLocation = createAsyncThunk(
@@ -74,10 +74,33 @@ export const updateLocation = createAsyncThunk(
         }
     }
 );
+export const filterLocation = createAsyncThunk(
+    "locationSlice/filterLocation",
+    async (searchKey, thunkAPI) => {
+        try {
+            const locationList = thunkAPI.getState().locationSlice.locationList;
+            let filterredList = locationList.filter((item) => {
+                if (
+                    item.name
+                        .trim()
+                        .toUpperCase()
+                        .includes(searchKey.trim().toUpperCase())
+                ) {
+                    return item;
+                }
+            });
+            return filterredList;
+        } catch (err) {
+            return thunkAPI.rejectWithValue();
+        }
+    }
+);
+
 const locationSlice = createSlice({
     name: "locatiohSlice",
     initialState: {
         locationList: [],
+        locationFilterredList: [],
         currentLocation: {},
         modalEdit: false,
         modalAdd: false,
@@ -93,9 +116,11 @@ const locationSlice = createSlice({
     extraReducers: {
         [getLocationList.pending]: (state, action) => {
             state.locationList = [];
+            state.locationFilterredList = [];
         },
         [getLocationList.fulfilled]: (state, action) => {
             state.locationList = action.payload;
+            state.locationFilterredList = action.payload;
         },
         [getLocationList.rejected]: (state, action) => {},
         [getLocationInfo.pending]: (state, action) => {
@@ -105,6 +130,10 @@ const locationSlice = createSlice({
             state.currentLocation = action.payload;
         },
         [getLocationInfo.rejected]: (state, action) => {},
+        [filterLocation.pending]: (state, action) => {},
+        [filterLocation.fulfilled]: (state, action) => {
+            state.locationFilterredList = action.payload;
+        },
     },
 });
 const { reducer, actions } = locationSlice;
