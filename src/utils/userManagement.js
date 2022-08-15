@@ -79,7 +79,7 @@ export const columnsUserManagement = [
             return (
                 <div className="flex justify-center w-full h-full space-x-4">
                     <button
-                        className="px-4 py-2 font-medium text-white bg-blue-600 rounded"
+                        className="px-4 py-2 font-medium text-white transition-all bg-blue-600 rounded hover:opacity-80"
                         onClick={() => (
                             dispatch(getInfoUser(record._id)),
                             dispatch(getIdUserPut(record._id)),
@@ -107,7 +107,7 @@ export const columnsUserManagement = [
                                     Huỷ
                                 </button>
                                 <button
-                                    className="px-4 py-2 font-medium text-white bg-blue-600 rounded"
+                                    className="px-4 py-2 font-medium text-white transition-all bg-blue-600 rounded hover:opacity-80"
                                     onClick={() =>
                                         dispatch(deleteUser(record._id))
                                     }
@@ -131,7 +131,7 @@ export const columnsUserManagement = [
                             );
                         }}
                     >
-                        <button className="px-4 py-2 font-medium text-white bg-red-600 rounded">
+                        <button className="px-4 py-2 font-medium text-white transition-all bg-red-600 rounded hover:opacity-80">
                             Xóa
                         </button>
                     </Popover>
