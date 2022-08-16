@@ -1,8 +1,14 @@
 import React, { Fragment, useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Table } from "antd";
+import { Table } from 'antd';
 import { columnsRoomManagement } from '../../../utils/roomManagement';
-import { closeFormEditRoomInfo, deleteRoom, getRoomInfo, selectFormEditStatus, selectRoomInfo } from '../../../redux/roomSlice';
+import {
+    closeFormEditRoomInfo,
+    deleteRoom,
+    getRoomInfo,
+    selectFormEditStatus,
+    selectRoomInfo,
+} from '../../../redux/roomSlice';
 import FormEditRoomInfo from '../FormEditRoomInfo/FormEditRoomInfo';
 import wifiIcon from '../../../assets/img/room-convenience/wifi.png';
 import poolIcon from '../../../assets/img/room-convenience/pool.png';
@@ -16,7 +22,6 @@ import heaterIcon from '../../../assets/img/room-convenience/heater.png';
 import hotTubIcon from '../../../assets/img/room-convenience/bath-tub.png';
 
 export default function TableRoomManagement({ roomList }) {
-
     let dispatch = useDispatch();
 
     //Control display status of form edit room info when click outside to close it
@@ -27,7 +32,7 @@ export default function TableRoomManagement({ roomList }) {
                 dispatch(closeFormEditRoomInfo());
             }
         };
-        document.addEventListener("mousedown", handleClickOutside);
+        document.addEventListener('mousedown', handleClickOutside);
     }, [ref]);
 
     const handleEditRoom = (idRoom) => {
@@ -36,9 +41,9 @@ export default function TableRoomManagement({ roomList }) {
     };
 
     const handleDeleteRoom = (idRoom) => {
-        if (window.confirm("Bạn có chắc muốn xoá phòng này?")) {
+        if (window.confirm('Bạn có chắc muốn xoá phòng này?')) {
             dispatch(deleteRoom(idRoom));
-        };
+        }
     };
 
     //Refactor roomList data in order adding roomConvenience details & 2 handle actions
@@ -58,7 +63,6 @@ export default function TableRoomManagement({ roomList }) {
                     locationId: room.locationId,
                     roomConvenience: [
                         {
-
                             image: wifiIcon,
                             name: 'Free Wifi',
                             isAvailable: room.wifi,
@@ -112,35 +116,36 @@ export default function TableRoomManagement({ roomList }) {
                     action: {
                         deleteRoomAction: handleDeleteRoom,
                         editRoomAction: handleEditRoom,
-                    }
-                }
-            })
-        };
+                    },
+                };
+            });
+        }
     };
     refactorRoomListData();
-
     let roomInfo = useSelector(selectRoomInfo);
     let formEditStatus = useSelector(selectFormEditStatus);
 
     return (
-        <div className='w-full relative'>
+        <div className="relative w-full">
             <Table
                 bordered
                 dataSource={roomListUpdate}
                 columns={columnsRoomManagement}
-                rowKey={"_id"}
-            // onChange={(e) => console.log(e)}
+                rowKey={'_id'}
+                // onChange={(e) => console.log(e)}
             ></Table>
-            {
-                formEditStatus
-                    ? <div className='w-full absolute top-0 z-10'>
-                        <div className="bg-black/30 fixed inset-0" ref={ref} />
-                        <div className='w-full absolute'>
+            {formEditStatus ? (
+                <div className="absolute top-0 z-10 w-full">
+                    <div className="fixed inset-0 bg-black/30" ref={ref} />
+                    <div className="absolute w-full">
+                        {roomInfo._id && (
                             <FormEditRoomInfo roomInfo={roomInfo} />
-                        </div>
+                        )}
                     </div>
-                    : <Fragment />
-            }
+                </div>
+            ) : (
+                <Fragment />
+            )}
         </div>
     );
 }
