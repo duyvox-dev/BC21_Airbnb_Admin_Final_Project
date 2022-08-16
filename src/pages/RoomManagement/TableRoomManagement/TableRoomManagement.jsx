@@ -20,6 +20,7 @@ import elevatorIcon from '../../../assets/img/room-convenience/elevator.png';
 import gymIcon from '../../../assets/img/room-convenience/gym.png';
 import heaterIcon from '../../../assets/img/room-convenience/heater.png';
 import hotTubIcon from '../../../assets/img/room-convenience/bath-tub.png';
+import ModalRoomManagement from '../FormEditRoomInfo/ModalRoomManagement';
 
 export default function TableRoomManagement({ roomList }) {
     let dispatch = useDispatch();
@@ -116,14 +117,13 @@ export default function TableRoomManagement({ roomList }) {
                     action: {
                         deleteRoomAction: handleDeleteRoom,
                         editRoomAction: handleEditRoom,
+                        dispatch,
                     },
                 };
             });
         }
     };
     refactorRoomListData();
-    let roomInfo = useSelector(selectRoomInfo);
-    let formEditStatus = useSelector(selectFormEditStatus);
 
     return (
         <div className="relative w-full">
@@ -132,20 +132,8 @@ export default function TableRoomManagement({ roomList }) {
                 dataSource={roomListUpdate}
                 columns={columnsRoomManagement}
                 rowKey={'_id'}
-                // onChange={(e) => console.log(e)}
             ></Table>
-            {formEditStatus ? (
-                <div className="absolute top-0 z-10 w-full">
-                    <div className="fixed inset-0 bg-black/30" ref={ref} />
-                    <div className="absolute w-full">
-                        {roomInfo._id && (
-                            <FormEditRoomInfo roomInfo={roomInfo} />
-                        )}
-                    </div>
-                </div>
-            ) : (
-                <Fragment />
-            )}
+            <ModalRoomManagement />
         </div>
     );
 }
