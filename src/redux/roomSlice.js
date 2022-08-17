@@ -30,7 +30,7 @@ export const getRoomList = createAsyncThunk(
             const result = await roomService.getRoomList(idLocation);
             return result.data;
         } catch (error) {
-            // message.error(error.response.data.message);
+            message.error(error.response.data.message);
             return thunkAPI.rejectWithValue();
         }
     }
@@ -45,7 +45,7 @@ export const deleteRoom = createAsyncThunk(
 
             return result.data;
         } catch (error) {
-            // message.error(error.response.data.message);
+            message.error(error.response.data.message);
             return thunkAPI.rejectWithValue();
         }
     }
@@ -59,7 +59,7 @@ export const getRoomInfo = createAsyncThunk(
             const result = await roomService.getRoomInfo(idRoom);
             return result.data;
         } catch (error) {
-            // message.error(error.response.data.message);
+            message.error(error.response.data.message);
             return thunkAPI.rejectWithValue();
         }
     }
@@ -72,17 +72,9 @@ export const editRoom = createAsyncThunk(
             let { idRoom, formData } = data;
             const result = await roomService.upadteRoomInfo(idRoom, formData);
             message.success("Cập nhật thông tin phòng thành công!");
-
             return getLocationInfor(result.data.locationId, result.data);
-            // const searchLocationInfoResult = await locationService.getLocationInfo(editRoomResult.data.locationId); //Find location details according to locationID
-
-            // let refinedResult = {//Add location details to roomInfo object
-            //     ...editRoomResult.data,
-            //     locationId: searchLocationInfoResult.data,
-            // };
-            // return refinedResult;
         } catch (error) {
-            // message.error(error.response.data.message);
+            message.error(error.response.data.message);
             return thunkAPI.rejectWithValue();
         }
     }
@@ -118,7 +110,7 @@ export const addRoom = createAsyncThunk(
                 return getLocationInfor(result.data.locationId, result.data);
             }
         } catch (error) {
-            // message.error(error.response.data.message);
+            message.error(error.response.data.message);
             return thunkAPI.rejectWithValue();
         }
     }
@@ -127,14 +119,13 @@ export const addRoom = createAsyncThunk(
 export const uploadImage = createAsyncThunk(
     "roomSlice/uploadImage",
     async (dataImage, thunkAPI) => {
+        console.log(dataImage);
         try {
             let { idRoom, formData } = dataImage;
             let result = await roomService.uploadRoomImage(idRoom, formData);
-            console.log(result.data);
             return result.data;
         } catch (error) {
-            // message.error(error.response.data.message);
-            console.log(error.response);
+            message.error(error.response.data.message);
             return thunkAPI.rejectWithValue();
         }
     }
