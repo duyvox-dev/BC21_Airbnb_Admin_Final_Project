@@ -70,9 +70,6 @@ export default function RoomManagement() {
                         enterButton="Tìm kiếm"
                         onChange={handleChangeSearchRoom}
                     />
-                    <p className="text-left text-red-500">
-                        * Nhập tên tỉnh thành đầy đủ và có dấu
-                    </p>
                 </div>
                 <div className="w-full">
                     <TableRoomManagement
