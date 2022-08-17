@@ -48,6 +48,7 @@ export default function RoomManagement() {
             setRoomList(allRooms);
         }
     };
+    document.title = "Airbnb | Quản lý phòng";
 
     return (
         <div className="room-management-page">
