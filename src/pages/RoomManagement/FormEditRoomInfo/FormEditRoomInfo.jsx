@@ -9,7 +9,6 @@ const { Option } = Select;
 const { TextArea } = Input;
 
 export default function FormEditRoomInfo({ roomInfo }) {
-    console.log(roomInfo);
     let dispatch = useDispatch();
 
     //Find location ID according to location name
