@@ -81,6 +81,7 @@ export const filterLocation = createAsyncThunk(
             const locationList = thunkAPI.getState().locationSlice.locationList;
             let filterredList = locationList.filter((item) => {
                 if (
+                    typeof item.name === "string" &&
                     item.name
                         .trim()
                         .toUpperCase()
@@ -91,6 +92,7 @@ export const filterLocation = createAsyncThunk(
             });
             return filterredList;
         } catch (err) {
+            console.log(err);
             return thunkAPI.rejectWithValue();
         }
     }

@@ -28,7 +28,7 @@ export default function TableLocationManagement() {
                 dataSource={locationData}
                 columns={columnsLocationManagement}
                 rowKey={"_id"}
-                onChange={(e) => console.log(e)}
+                // onChange={(e) => console.log(e)}
             ></Table>
         </div>
     );
