@@ -1,8 +1,8 @@
-import { createAsyncThunk, createSlice, createAction } from "@reduxjs/toolkit";
-import { locationService } from "../services/locationService";
-import { message } from "antd";
+import { createAsyncThunk, createSlice, createAction } from '@reduxjs/toolkit';
+import { locationService } from '../services/locationService';
+import { message } from 'antd';
 export const createLocation = createAsyncThunk(
-    "locationSlice/createLocation",
+    'locationSlice/createLocation',
     async (locationInfo, thunkAPI) => {
         try {
             const result = await locationService.createLocation(locationInfo);
@@ -19,20 +19,19 @@ export const createLocation = createAsyncThunk(
 );
 
 export const getLocationList = createAsyncThunk(
-    "locatiohSlice/getLocationList",
+    'locatiohSlice/getLocationList',
     async (thunkAPI) => {
         try {
             const result = await locationService.getLocationList();
-            // console.log(result.data);
             return result.data;
         } catch (error) {
-            // message.error(error.response.data.message);
+            message.error(error.response.data.message);
             return thunkAPI.rejectWithValue();
         }
     }
 );
 export const getLocationInfo = createAsyncThunk(
-    "locationSlice/getLocationList",
+    'locationSlice/getLocationList',
     async (locationId, thunkAPI) => {
         try {
             const result = await locationService.getLocationInfo(locationId);
@@ -43,12 +42,12 @@ export const getLocationInfo = createAsyncThunk(
     }
 );
 export const deleteLocation = createAsyncThunk(
-    "locationSlice/deleteLocation",
+    'locationSlice/deleteLocation',
     async (locationID, thunkAPI) => {
         try {
             const result = await locationService.deleteLocation(locationID);
             thunkAPI.dispatch(getLocationList());
-            message.success("Xoá vị trí thành công!");
+            message.success('Xoá vị trí thành công!');
             return result.data;
         } catch (error) {
             message.error(error.response.data.message);
@@ -57,7 +56,7 @@ export const deleteLocation = createAsyncThunk(
     }
 );
 export const updateLocation = createAsyncThunk(
-    "locationSlice/updateLocation",
+    'locationSlice/updateLocation',
     async ({ locationID, locationData }, thunkAPI) => {
         try {
             const result = await locationService.updateLocationInfo(
@@ -75,13 +74,13 @@ export const updateLocation = createAsyncThunk(
     }
 );
 export const filterLocation = createAsyncThunk(
-    "locationSlice/filterLocation",
+    'locationSlice/filterLocation',
     async (searchKey, thunkAPI) => {
         try {
             const locationList = thunkAPI.getState().locationSlice.locationList;
             let filterredList = locationList.filter((item) => {
                 if (
-                    typeof item.name === "string" &&
+                    typeof item.name === 'string' &&
                     item.name
                         .trim()
                         .toUpperCase()
@@ -92,14 +91,14 @@ export const filterLocation = createAsyncThunk(
             });
             return filterredList;
         } catch (err) {
-            console.log(err);
+            message.error('Có lỗi xảy ra vui lòng thử lại');
             return thunkAPI.rejectWithValue();
         }
     }
 );
 
 const locationSlice = createSlice({
-    name: "locatiohSlice",
+    name: 'locatiohSlice',
     initialState: {
         locationList: [],
         locationFilterredList: [],

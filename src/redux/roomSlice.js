@@ -1,8 +1,8 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { message } from "antd";
-import { roomService } from "../services/roomService";
-import _ from "lodash";
-import { locationService } from "../services/locationService";
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import { message } from 'antd';
+import { roomService } from '../services/roomService';
+import _ from 'lodash';
+import { locationService } from '../services/locationService';
 
 let initialState = {
     roomList: [],
@@ -24,7 +24,7 @@ const getLocationInfor = async (locationId, initRoomData) => {
 };
 
 export const getRoomList = createAsyncThunk(
-    "roomSlice/getRoomList",
+    'roomSlice/getRoomList',
     async (idLocation, thunkAPI) => {
         try {
             const result = await roomService.getRoomList(idLocation);
@@ -37,11 +37,11 @@ export const getRoomList = createAsyncThunk(
 );
 
 export const deleteRoom = createAsyncThunk(
-    "roomSlice/deleteRoom",
+    'roomSlice/deleteRoom',
     async (idRoom, thunkAPI) => {
         try {
             const result = await roomService.deleteRoom(idRoom);
-            message.success("Xoá phòng thành công!");
+            message.success('Xoá phòng thành công!');
 
             return result.data;
         } catch (error) {
@@ -53,7 +53,7 @@ export const deleteRoom = createAsyncThunk(
 
 export const getRoomInfo = createAsyncThunk(
     //Get the room information by roomID after click edit button
-    "roomSlice/getRoomInfo",
+    'roomSlice/getRoomInfo',
     async (idRoom, thunkAPI) => {
         try {
             const result = await roomService.getRoomInfo(idRoom);
@@ -66,12 +66,12 @@ export const getRoomInfo = createAsyncThunk(
 );
 
 export const editRoom = createAsyncThunk(
-    "roomSlice/editRoom",
+    'roomSlice/editRoom',
     async (data, thunkAPI) => {
         try {
             let { idRoom, formData } = data;
             const result = await roomService.upadteRoomInfo(idRoom, formData);
-            message.success("Cập nhật thông tin phòng thành công!");
+            message.success('Cập nhật thông tin phòng thành công!');
             return getLocationInfor(result.data.locationId, result.data);
         } catch (error) {
             message.error(error.response.data.message);
@@ -81,7 +81,7 @@ export const editRoom = createAsyncThunk(
 );
 
 export const addRoom = createAsyncThunk(
-    "roomSlice/addRoom",
+    'roomSlice/addRoom',
     async (formData, thunkAPI) => {
         try {
             //Search room list in order to check the new room information is inexistent
@@ -94,7 +94,7 @@ export const addRoom = createAsyncThunk(
             for (let room of roomList) {
                 if (
                     room.name.localeCompare(formData.name, undefined, {
-                        sensitivity: "base",
+                        sensitivity: 'base',
                     }) === 0
                 ) {
                     roomExisted = true;
@@ -102,11 +102,11 @@ export const addRoom = createAsyncThunk(
             }
 
             if (roomExisted) {
-                message.error("Phòng đã tồn tại, vui lòng kiểm tra lại!");
-                throw new Error("Phòng đã tồn tại, vui lòng kiểm tra lại!");
+                message.error('Phòng đã tồn tại, vui lòng kiểm tra lại!');
+                throw new Error('Phòng đã tồn tại, vui lòng kiểm tra lại!');
             } else {
                 const result = await roomService.createRoom(formData);
-                message.success("Thêm phòng mới thành công!");
+                message.success('Thêm phòng mới thành công!');
                 return getLocationInfor(result.data.locationId, result.data);
             }
         } catch (error) {
@@ -117,9 +117,8 @@ export const addRoom = createAsyncThunk(
 );
 
 export const uploadImage = createAsyncThunk(
-    "roomSlice/uploadImage",
+    'roomSlice/uploadImage',
     async (dataImage, thunkAPI) => {
-        console.log(dataImage);
         try {
             let { idRoom, formData } = dataImage;
             let result = await roomService.uploadRoomImage(idRoom, formData);
@@ -132,7 +131,7 @@ export const uploadImage = createAsyncThunk(
 );
 
 const roomSlice = createSlice({
-    name: "roomSlice",
+    name: 'roomSlice',
     initialState: initialState,
     reducers: {
         openFormEditRoomInfo: (state, action) => {
@@ -152,7 +151,7 @@ const roomSlice = createSlice({
         //Finding rooms
         searchRoom: (state, action) => {
             let newRoomList = state.roomList.filter((room) => {
-                if (typeof room.name === "string") {
+                if (typeof room.name === 'string') {
                     //Check valid search input value must be string
                     if (
                         room.name
